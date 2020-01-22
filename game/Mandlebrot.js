@@ -13,6 +13,7 @@ let bar
 let counter3
 let trueDensity
 let radius
+let mode = true
 
 class Point
 {
@@ -77,7 +78,7 @@ function draw()
 			line(-490,-440,-390,-440)
 		
 			fill(0)
-			rect(190,-490,290,30)
+			rect(190,-490,290,60)
 			switch(density)
 			{
 				case 1:
@@ -159,9 +160,25 @@ function draw()
 			}
 			fill(255)
 			text(trueDensity,455,-470)
-			text("Density (change with UP AND DOWN arrows): ",200,-470)
+			text("Density (change with UP and DOWN arrows): ",200,-470)
+			text("Press 'm' to toggle between modes  | ",200,-440)
+			if(mode)
+			{
+				text("colorful",400,-440)
+			}
+			else
+			{
+				text("simple but fast",400,-440)
+			}
 			
-			stage=0
+			if(mode)
+			{
+				stage=0
+			}
+			else
+			{
+				stage=3
+			}
 			break;
 		case 0:
 			line(-490+map((j-xmin)*((density*size)/2000)+i-xmin,0,(size)*((density*size)/2000)+size,0,100),-490,-490+map((j-xmin)*((density*size)/2000)+i-xmin,0,(size)*((density*size)/2000)+size,0,100),-480)
@@ -195,6 +212,40 @@ function draw()
 			fill(0)
 			rect(-490,-490,100,10)
 			break;
+		
+		case 3:
+			for(i=xmin;i<xmin+size;i+=(density*size)/2000)
+			{
+				for(j=ymin;j<ymin+size;j+=(density*size)/2000)
+				{
+					x=i
+					y=j
+					preva=x
+					a=x
+					prevb=y
+					b=y
+
+					for(let k=0;k<331;k++)
+					{
+						preva=a
+						prevb=b
+						a=preva*preva-prevb*prevb+x
+						b=2*preva*prevb+y
+					}
+
+					if(modul(a,b)<2)
+					{
+						mandlebrot.push(new Point(x,y,331))
+						l++
+					}
+				}
+			}
+			stage=2
+			fill(0)
+			rect(-490,-490,100,10)
+			rect(-490,-470,100,10)
+			break;
+		
 		
 		case 1:
 			if(counter1<13)
@@ -279,7 +330,7 @@ function draw()
 			break;
 		case 5:
 			fill(0)
-			rect(190,-490,290,30)
+			rect(190,-490,290,60)
 			switch(density)
 			{
 				case 1:
@@ -361,107 +412,18 @@ function draw()
 			}
 			fill(255)
 			text(trueDensity,455,-470)
-			text("Density (change with UP AND DOWN arrows): ",200,-470)
+			text("Density (change with UP and DOWN arrows): ",200,-470)
+			text("Press 'm' to toggle between modes  | ",200,-440)
+			if(mode)
+			{
+				text("colorful",400,-440)
+			}
+			else
+			{
+				text("simple but fast",400,-440)
+			}
 			break;
 	}
-	line(-490,-490,-490,-480)
-			line(110-500,-490,110-500,-480)
-			line(-490,-470,-490,-460)
-			line(110-500,-470,110-500,-460)
-			line(-490,-450,-490,-440)
-			line(110-500,-450,110-500,-440)
-
-			line(-490,-490,-390,-490)
-			line(-490,-480,-390,-480)
-			line(-490,-470,-390,-470)
-			line(-490,-460,-390,-460)
-			line(-490,-450,-390,-450)
-			line(-490,-440,-390,-440)
-		
-			fill(0)
-			rect(190,-490,290,30)
-			switch(density)
-			{
-				case 1:
-					trueDensity=100
-					radius=1
-					break;
-				case 2:
-					trueDensity=90
-					radius=1
-					break;
-				case 3:
-					trueDensity=80
-					radius=2
-					break;
-				case 4:
-					trueDensity=70
-					radius=2
-					break;
-				case 5:
-					trueDensity=60
-					radius=3
-					break;
-				case 6:
-					trueDensity=50
-					radius=3
-					break;
-				case 7:
-					trueDensity=40
-					radius=4
-					break;
-				case 8:
-					trueDensity=30
-					radius=4
-					break;
-				case 9:
-					trueDensity=20
-					radius=5
-					break;
-				case 10:
-					trueDensity=10
-					radius=5
-					break;
-				case 20:
-					trueDensity=9
-					radius=10
-					break;
-				case 30:
-					trueDensity=8
-					radius=15
-					break;
-				case 40:
-					trueDensity=7
-					radius=20
-					break;
-				case 50:
-					trueDensity=6
-					radius=25
-					break;
-				case 60:
-					trueDensity=5
-					radius=30
-					break;
-				case 70:
-					trueDensity=4
-					radius=35
-					break;
-				case 80:
-					trueDensity=3
-					radius=40
-					break;
-				case 90:
-					trueDensity=2
-					radius=45
-					break;
-				case 100:
-					trueDensity=1
-					radius=50
-					break;
-			}
-			fill(255)
-			text(trueDensity,455,-470)
-			text("Density (change with UP AND DOWN arrows): ",200,-470)
 }
 
 function modul(x,y)
@@ -544,6 +506,13 @@ function keyPressed()
 		{
 			density+=10
 		}
+		stage=5
+		redraw()
+	}
+
+	if(key == "m")
+	{
+		mode=!mode
 		stage=5
 		redraw()
 	}
